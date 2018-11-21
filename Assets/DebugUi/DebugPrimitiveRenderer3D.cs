@@ -48,7 +48,7 @@ namespace Kayac
 			微分は2at + b。これが接線になる。
 			*/
 			Vector3 a, b, c;
-			MathUtil.MakeQuadBezier(out a, out b, out c, ref start, ref end, ref controlPoint);
+			MakeQuadBezier(out a, out b, out c, ref start, ref end, ref controlPoint);
 
 			Vector3 forwardVector = _camera.gameObject.transform.forward;
 
@@ -58,7 +58,7 @@ namespace Kayac
 			{
 				// 中心点を算出する
 				float t = (float)i * tScale;
-				Vector3 p = MathUtil.EvaluateQuad(ref a, ref b, ref c, t);
+				Vector3 p = EvaluateQuad(ref a, ref b, ref c, t);
 				// 接線=微分を算出
 				Vector3 tangent = a;
 				tangent *= t * 2f;
@@ -421,6 +421,23 @@ namespace Kayac
 			AddQuadIndices(0, 4, 7, 3);
 			_vertexCount += 8;
 			return true;
+		}
+
+		static void MakeQuadBezier(out Vector3 a2, out Vector3 a1, out Vector3 a0, ref Vector3 begin, ref Vector3 end, ref Vector3 controlPoint)
+		{
+			a2 = end - (controlPoint * 2f) + begin;
+			a1 = (controlPoint - begin) * 2f;
+			a0 = begin;
+		}
+
+		static Vector3 EvaluateQuad(ref Vector3 a2, ref Vector3 a1, ref Vector3 a0, float t)
+		{
+			Vector3 r = a2;
+			r *= t;
+			r += a1;
+			r *= t;
+			r += a0;
+			return r;
 		}
 	}
 }

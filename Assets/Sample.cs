@@ -6,7 +6,7 @@ using Kayac;
 public class Sample : MonoBehaviour
 {
 	[SerializeField]
-	DebugUiManager _debugUi;
+	GameObject _gameObjectForDebugUiManager;
 	[SerializeField]
 	Shader _textShader;
 	[SerializeField]
@@ -16,10 +16,10 @@ public class Sample : MonoBehaviour
 	[SerializeField]
 	Camera _camera;
 
+	DebugUiManager _debugUi;
 	DebugPrimitiveRenderer2D _renderer;
 	SampleWindow _sampleWindow;
 
-	// Use this for initialization
 	void Start()
 	{
 		_renderer = new DebugPrimitiveRenderer2D(
@@ -27,13 +27,14 @@ public class Sample : MonoBehaviour
 			_texturedShader,
 			_font,
 			_camera,
-			8192);
-		_debugUi.Initialize(_renderer);
+			capacity: 8192);
+		_debugUi = DebugUiManager.Create(
+			_gameObjectForDebugUiManager,
+			_renderer);
 		_sampleWindow = new SampleWindow(_debugUi);
 		_debugUi.Add(_sampleWindow);
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
 		_debugUi.ManualUpdate(Time.deltaTime);

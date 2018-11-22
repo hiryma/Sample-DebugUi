@@ -69,11 +69,29 @@ namespace Kayac
 			}
 		}
 
+		public static DebugUiManager Create(
+			GameObject parentGameObject,
+			DebugPrimitiveRenderer2D renderer)
+		{
+			var self = parentGameObject.AddComponent<DebugUiManager>();
+			self.Initialize(renderer);
+			Debug.Assert(self.rectTransform != null, "RectTransformがない!canvasの下にあるGameObjectを指定してください!");
+			if (self.rectTransform != null)
+			{
+				self.rectTransform.anchorMin = new Vector2(0f, 0f);
+				self.rectTransform.anchorMax = new Vector2(1f, 1f);
+				self.rectTransform.offsetMin = new Vector2(0f, 0f);
+				self.rectTransform.offsetMax = new Vector2(0f, 0f);
+			}
+			return self;
+		}
+
 		public void Initialize(DebugPrimitiveRenderer2D renderer)
 		{
 			_renderer = renderer;
 			_root = new DebugUiControl();
 			_input = new Input();
+			this.raycastTarget = true;
 			inputEnabled = true;
 		}
 
